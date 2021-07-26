@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
+using Microsoft.EntityFrameworkCore;
+
 using latest_prices.Models;
 
 namespace latest_prices.Controllers
@@ -25,7 +27,25 @@ namespace latest_prices.Controllers
             this.db = dbcontext;
         }
 
-        [HttpGet]
+        [HttpGet("")]
         public List<Price> Get() => db.Prices.ToList();
+
+        [HttpGet("latest")]
+        public List<LatestPrice> Latest()
+        {
+            return db.LatestPrices.FromSqlRaw(@"
+            SELECT p1.id, 
+                p1.ticker, 
+                p1.published_at,
+                p1.price_in_cents
+            FROM prices p1
+            LEFT JOIN
+                prices p2
+                    ON p1.ticker = p2.ticker
+                    AND p1.published_at < p2.published_at
+            WHERE 
+                    p2.id is NULL;
+            ").ToList();
+        }
     }
 }

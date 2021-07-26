@@ -41,3 +41,21 @@ To remove all migrations:
 
     dotnet ef database update 0
     dotnet ef migrations remove
+
+
+
+### Queries
+
+
+    SELECT p1.id, 
+       p1.ticker, 
+       p1.published_at ,
+	   p1.price_in_cents
+       FROM prices p1
+    left join
+        prices p2
+            on p1.ticker = p2.ticker
+            and p1.published_at < p2.published_at
+    where 
+        p2.id is null;
+

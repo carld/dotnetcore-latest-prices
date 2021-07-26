@@ -23,5 +23,7 @@ namespace latest_prices.Models
 
         public DbSet<Instrument> Instruments { get; set; }
         public DbSet<Price> Prices { get; set; }
+
+        public DbSet<LatestPrice> LatestPrices { get; set; }
     }
 }
