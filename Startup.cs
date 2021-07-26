@@ -12,6 +12,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
+using Microsoft.EntityFrameworkCore;
+using latest_prices.Models;
+
 namespace latest_prices
 {
     public class Startup
@@ -28,6 +31,9 @@ namespace latest_prices
         {
 
             services.AddControllers();
+
+            services.AddDbContext<MarketContext>(opt => opt.UseSqlite(Configuration.GetConnectionString("MarketContext")));
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "latest_prices", Version = "v1" });
