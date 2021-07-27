@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-//using MvcMovie.Data;
+
 using System;
 using System.Linq;
 using System.Collections.Generic;
@@ -27,26 +27,27 @@ namespace latest_prices.Models
                 }
 
                 List<String> tickers = DotNetUtilities.Combinations.Combo2(new List<string> { "A", "B", "C" }, "" );
-                List<DateTime> timestamps = new List<DateTime>();
-                StreamReader sr = new StreamReader("timestamps.txt");
-                String line;
-                while ( (line = sr.ReadLine()) != null) {
-                    timestamps.Add( DateTime.Parse(line));
-                }
-                int n = 0;
                 var randomTest = new Random();
-                foreach(DateTime dt  in timestamps)
+                DateTime startDate = new DateTime(2021, 8, 21, 10, 0, 0);
+                for(int m = 0; m < 100; m++ )
                 {
-                    context.Prices.Add(
-                        new Price
-                        {
-                            Ticker = tickers[n % tickers.Count],
-                            PublishedAt = dt,
-                            Cents = randomTest.Next(70, 800)
-                        }
-                    );
-                    n++;
+                    startDate = startDate - new TimeSpan(1, 0, 0, 0);
+                    for(int n = 0; n < 1000; n ++)
+                    {
+                        TimeSpan newSpan = new TimeSpan(0, randomTest.Next(0, 60 * 6), 0);
+                        DateTime newDate = startDate + newSpan;
+
+                        context.Prices.Add(
+                            new Price
+                            {
+                                Ticker = tickers[(m + n) % tickers.Count],
+                                Published = newDate,
+                                Cents = randomTest.Next(70, 800)
+                            }
+                        );
+                    }
                 }
+
                 context.SaveChanges();
             }
         }

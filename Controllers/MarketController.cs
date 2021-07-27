@@ -34,17 +34,15 @@ namespace latest_prices.Controllers
         public List<LatestPrice> Latest()
         {
             return db.LatestPrices.FromSqlRaw(@"
-            SELECT p1.id, 
+                SELECT p1.id, 
                 p1.ticker, 
                 p1.published_at,
                 p1.price_in_cents
-            FROM prices p1
-            LEFT JOIN
-                prices p2
-                    ON p1.ticker = p2.ticker
-                    AND p1.published_at < p2.published_at
-            WHERE 
-                    p2.id is NULL;
+                FROM prices p1
+                JOIN
+                ( SELECT id, ticker, MAX(published_at) FROM prices GROUP BY ticker)
+                AS p2
+                ON p1.id = p2.id
             ").ToList();
         }
     }

@@ -9,7 +9,7 @@ using latest_prices.Models;
 namespace latest_prices.Migrations
 {
     [DbContext(typeof(MarketContext))]
-    [Migration("20210726111052_InitialCreate")]
+    [Migration("20210727101831_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -18,18 +18,28 @@ namespace latest_prices.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "5.0.8");
 
-            modelBuilder.Entity("latest_prices.Models.Instrument", b =>
+            modelBuilder.Entity("latest_prices.Models.LatestPrice", b =>
                 {
+                    b.Property<int>("Cents")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("price_in_cents");
+
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("Published")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("published_at");
+
+                    b.Property<string>("Ticker")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("ticker");
+
+                    b.Property<int>("Trades")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("ISIN")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Instruments");
+                    b.ToTable("LatestPrices");
                 });
 
             modelBuilder.Entity("latest_prices.Models.Price", b =>
@@ -43,7 +53,7 @@ namespace latest_prices.Migrations
                         .HasColumnType("INTEGER")
                         .HasColumnName("price_in_cents");
 
-                    b.Property<DateTime>("PublishedAt")
+                    b.Property<DateTime>("Published")
                         .HasColumnType("TEXT")
                         .HasColumnName("published_at");
 
@@ -52,6 +62,10 @@ namespace latest_prices.Migrations
                         .HasColumnName("ticker");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Published");
+
+                    b.HasIndex("Ticker");
 
                     b.ToTable("Prices");
                 });

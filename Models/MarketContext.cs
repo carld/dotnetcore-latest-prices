@@ -21,7 +21,7 @@ namespace latest_prices.Models
         //protected override void OnConfiguring(DbContextOptionsBuilder options)
         //    => options.UseSqlite($"Data Source={DbPath}");
 
-        public DbSet<Instrument> Instruments { get; set; }
+
         public DbSet<Price> Prices { get; set; }
 
         public DbSet<LatestPrice> LatestPrices { get; set; }

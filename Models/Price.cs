@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace latest_prices.Models
 {
+    [Index(nameof(Ticker)), Index(nameof(Published))]
     public class Price
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -13,7 +14,7 @@ namespace latest_prices.Models
 
         [Column("published_at")]
         [DataType(DataType.DateTime)]
-        public DateTime PublishedAt { get; set; }
+        public DateTime Published { get; set; }
         [Column("ticker")]
         public string Ticker { get; set; }
         [Column("price_in_cents")]
