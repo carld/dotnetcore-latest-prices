@@ -26,10 +26,13 @@ namespace latest_prices.Models
                     return;   // DB has been seeded
                 }
 
+                // Improve performance of bulk seed by disabling change tracking
+                context.ChangeTracker.AutoDetectChangesEnabled = false;
+
                 List<String> tickers = DotNetUtilities.Combinations.Combo2(new List<string> { "A", "B", "C" }, "" );
                 var randomTest = new Random();
                 DateTime startDate = new DateTime(2021, 8, 21, 10, 0, 0);
-                for(int m = 0; m < 100; m++ )
+                for(int m = 0; m < 500; m++ )
                 {
                     startDate = startDate - new TimeSpan(1, 0, 0, 0);
                     for(int n = 0; n < 1000; n ++)
@@ -46,9 +49,12 @@ namespace latest_prices.Models
                             }
                         );
                     }
+                    
                 }
-
                 context.SaveChanges();
+
+                // Restore tracking of changes
+                context.ChangeTracker.AutoDetectChangesEnabled = true;
             }
         }
     }

@@ -101,5 +101,5 @@ Adding indexes to the columns used in the left join, `ticker`, and `published_at
 
 > Run Time: real 0.054 user 0.052637 sys 0.000744
 
-Note that to be able to join to the subquery a unique id is necessary. Having the `id` column in the `prices` table made this join possible. Using the `published_at` column to join on is a possibility, although there may be duplicates returned when there is more than one price for a ticker published at the same time.
+To be able to join to the subquery a unique id is necessary. Having the `id` column in the `prices` table made this join possible. Using the `published_at` column to join on is a possibility, although there may be duplicates returned when there is more than one price for a ticker published at the same time.
 

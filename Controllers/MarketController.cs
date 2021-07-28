@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 using latest_prices.Models;
+using latest_prices.Queries;
 
 namespace latest_prices.Controllers
 {
@@ -29,34 +30,25 @@ namespace latest_prices.Controllers
         [HttpGet]
         public List<Price> Get() => db.Prices.ToList();
 
+        /* This action is requested from a URL like:
+         *
+         *   https://localhost:5001/api/market/latest?before=2021-07-04
+         *
+         */
         [Route("latest")]
         [HttpGet]
         public List<LatestPrice> LatestPrices(DateTime? before = null)
         {
-            var parameter1 = before.HasValue ? 
-                before.Value.ToString("s") 
-                : DateTime.Now.ToString("s");
+            DateTime datetime = before.HasValue ? 
+                before.Value
+                : 
+                DateTime.Now;
 
-            Console.WriteLine("Parameter ++ '{0}'", parameter1);
+            //Console.WriteLine("Parameter ++ '{0}'", datetime);
 
-            return db.LatestPrices.FromSqlRaw(
-                @"
-                    SELECT p1.id, 
-                    p1.ticker, 
-                    p1.published_at,
-                    p1.price_in_cents
-                    FROM prices p1
-                    JOIN
-                    ( SELECT id, ticker, MAX(published_at) 
-                        FROM prices 
-                        WHERE published_at < {0}
-                        GROUP BY ticker)
-                    AS p2
-                    ON p1.id = p2.id
-                    "
-                , 
-                parameter1 
-            ).ToList();
+            IQueryable<LatestPrice> query = new LatestPriceQuery(this.db).Before(datetime);
+
+            return query.ToList();
         }
     }
 }

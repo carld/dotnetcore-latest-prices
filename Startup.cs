@@ -32,7 +32,12 @@ namespace latest_prices
 
             services.AddControllers();
 
-            services.AddDbContext<MarketContext>(opt => opt.UseSqlite(Configuration.GetConnectionString("MarketContext")));
+            services.AddDbContext<MarketContext>(
+                opt => 
+                {
+                    opt.UseSqlite(Configuration.GetConnectionString("MarketContext"));
+                    //opt.EnableSensitiveDataLogging();  
+                });
 
             services.AddSwaggerGen(c =>
             {
