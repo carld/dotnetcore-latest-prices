@@ -47,9 +47,9 @@ namespace latest_prices.Queries
         /* Returns the latest price for every ticker before the given date and time.
          * The return object is IQueryable so further filters may be added.
          */
-        public IQueryable<LatestPrice> Before(DateTime before)
+        public IQueryable<Price> Before(DateTime before)
         {
-            return this.db.LatestPrices.FromSqlRaw(LatestPriceQuery.raw_sql, before);
+            return this.db.Prices.FromSqlRaw(LatestPriceQuery.raw_sql, before);
         }
     }
 

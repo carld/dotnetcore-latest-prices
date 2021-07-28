@@ -24,6 +24,5 @@ namespace latest_prices.Models
 
         public DbSet<Price> Prices { get; set; }
 
-        public DbSet<LatestPrice> LatestPrices { get; set; }
     }
 }

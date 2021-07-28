@@ -37,7 +37,7 @@ namespace latest_prices.Controllers
          */
         [Route("latest")]
         [HttpGet]
-        public List<LatestPrice> LatestPrices(DateTime? before = null)
+        public List<Price> LatestPrices(DateTime? before = null)
         {
             DateTime datetime = before.HasValue ? 
                 before.Value
@@ -46,7 +46,7 @@ namespace latest_prices.Controllers
 
             //Console.WriteLine("Parameter ++ '{0}'", datetime);
 
-            IQueryable<LatestPrice> query = new LatestPriceQuery(this.db).Before(datetime);
+            IQueryable<Price> query = new LatestPriceQuery(this.db).Before(datetime);
 
             return query.ToList();
         }
