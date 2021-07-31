@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 using latest_prices.Models;
 using latest_prices.Queries;
+using latest_prices.DTOs;
 
 namespace latest_prices.Controllers
 {
@@ -37,7 +38,7 @@ namespace latest_prices.Controllers
          */
         [Route("latest")]
         [HttpGet]
-        public List<Price> LatestPrices(DateTime? before = null)
+        public List<PriceDTO> LatestPrices(DateTime? before = null)
         {
             DateTime datetime = before.HasValue ? 
                 before.Value
@@ -46,7 +47,14 @@ namespace latest_prices.Controllers
 
             //Console.WriteLine("Parameter ++ '{0}'", datetime);
 
-            IQueryable<Price> query = new LatestPriceQuery(this.db).Before(datetime);
+            IQueryable<PriceDTO> query = new LatestPriceQuery(this.db)
+                .Before(datetime)
+                .Select(p => new PriceDTO 
+                    { 
+                        Published = p.Published, 
+                        Ticker = p.Ticker, 
+                        Price = p.Cents 
+                    });
 
             return query.ToList();
         }
