@@ -33,22 +33,25 @@ namespace latest_prices.Controllers
 
         /* This action is requested from a URL like:
          *
-         *   https://localhost:5001/api/market/latest?before=2021-07-04
+         *   https://localhost:5001/api/market/latest?start=2021-06-04&end=2021-07-20
          *
+         * The latest price, i.e. that closest to the end date, within the provided time range 
+         * will be returned.
          */
         [Route("latest")]
         [HttpGet]
-        public List<PriceDTO> LatestPrices(DateTime? before = null)
+        public List<PriceDTO> LatestPrices(DateTime? start = null, DateTime? end = null)
         {
-            DateTime datetime = before.HasValue ? 
-                before.Value
-                : 
-                DateTime.Now;
+            DateTime queryEnd = end.GetValueOrDefault(DateTime.Now);
+            DateTime queryStart = start.GetValueOrDefault(
+                new DateTime(queryEnd.Year, queryEnd.Month, queryEnd.Day, 0, 0, 0)
+                );
 
-            //Console.WriteLine("Parameter ++ '{0}'", datetime);
+            //Console.WriteLine("Parameter ++ start '{0}'", queryStart);
+            //Console.WriteLine("Parameter ++ end   '{0}'", queryEnd);
 
             IQueryable<PriceDTO> query = new LatestPriceQuery(this.db)
-                .Before(datetime)
+                .Between(queryStart, queryEnd)
                 .Select(p => new PriceDTO 
                     { 
                         Published = p.Published, 

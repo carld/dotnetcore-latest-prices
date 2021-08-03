@@ -38,7 +38,7 @@ namespace latest_prices.Queries
             JOIN
             ( SELECT id, ticker, MAX(published_at) 
                 FROM prices 
-                WHERE published_at < {0}
+                WHERE published_at BETWEEN {0} AND {1}
                 GROUP BY ticker)
             AS p2
             ON p1.id = p2.id
@@ -47,9 +47,9 @@ namespace latest_prices.Queries
         /* Returns the latest price for every ticker before the given date and time.
          * The return object is IQueryable so further filters may be added.
          */
-        public IQueryable<Price> Before(DateTime before)
+        public IQueryable<Price> Between(DateTime start, DateTime end)
         {
-            return this.db.Prices.FromSqlRaw(LatestPriceQuery.raw_sql, before);
+            return this.db.Prices.FromSqlRaw(LatestPriceQuery.raw_sql, start, end);
         }
     }
 
