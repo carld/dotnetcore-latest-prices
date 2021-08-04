@@ -30,7 +30,8 @@ namespace latest_prices.Queries
          * is a requirement to provide a feed of prices delayed by 10 minutes.
          */
         private const String raw_sql = @"
-            SELECT p1.id, 
+            SELECT 
+            p1.id, 
             p1.ticker, 
             p1.published_at,
             p1.price_in_cents

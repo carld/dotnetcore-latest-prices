@@ -103,3 +103,39 @@ Adding indexes to the columns used in the left join, `ticker`, and `published_at
 
 To be able to join to the subquery a unique id is necessary. Having the `id` column in the `prices` table made this join possible. Using the `published_at` column to join on is a possibility, although there may be duplicates returned when there is more than one price for a ticker published at the same time.
 
+#### Groupwise maximum using an uncorelated subquery with BETWEEN clause
+
+    SELECT
+    p1.id,
+    p1.ticker,
+    p1.published_at,
+    p1.price_in_cents
+    FROM prices p1
+    JOIN
+    ( SELECT id, ticker, MAX(published_at)
+        FROM prices
+        WHERE published_at BETWEEN '2021-07-01' AND '2021-08-01'
+        GROUP BY ticker)
+    AS p2
+    ON p1.id = p2.id;
+
+> Run Time: real 0.026 user 0.025409 sys 0.000903
+
+A further performance improvement was obtained by reducing the number of records retrieved in the subquery.
+
+### Notes on structure
+
+
+
+### Notes on using the SQLite command line interface
+
+The SQLite command line interface is invoked by `sqlite market.db`.
+
+It was useful to be able to edit a multiline SQL query from the sqlite command line interface, by launching vi:
+
+    sqlite> .shell vi q.sql
+
+The query could then be executed with:
+
+    sqlite> .read q.sql
+
